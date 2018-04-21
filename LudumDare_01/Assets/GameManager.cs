@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+
+    public float quadGameScore;
+    public float SwingerScore;
+    public float tapScore;
+    public float mathScore;
 	// Use this for initialization
 	void Start () {
 		
