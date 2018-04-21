@@ -13,6 +13,7 @@ public class Quad : Clickable {
     public void visualInit(int number) {
         text.text = number.ToString();
     }
+
     public void init(int number) {
         current_number = number;
         text.text = current_number.ToString();
@@ -27,7 +28,7 @@ public class Quad : Clickable {
     }
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         quadGame = transform.parent.gameObject.GetComponent<QuadGame>();
         rend = GetComponent<SpriteRenderer>();
         text = transform.GetComponentInChildren<TextMesh>();

@@ -92,7 +92,7 @@ public class QuadGame : MonoBehaviour {
                 yield return null;
             }
         }
-        score += 1;
+        GameManager.Instance.quadGameSuccess();
         StartCoroutine(ReShuffle());
         yield return null;
     }

@@ -6,6 +6,8 @@ public class CharacterMovement : MonoBehaviour {
 
     public float maxSpeed = 1f;
 
+    public float jumpBonusMultiplier = 0f;
+
     [Header("Jump Related Variables")]
     [Range(0, 10)]
     public float jumpVelocity = 5f;
@@ -18,6 +20,8 @@ public class CharacterMovement : MonoBehaviour {
     bool grounded = true;
 
     Vector2 playerSize;
+    Vector2 playerScale;
+
     Vector2 boxSize;
 
 
@@ -27,10 +31,10 @@ public class CharacterMovement : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        playerScale = new Vector2(transform.localScale.x, transform.localScale.y);
         playerSize = GetComponent<BoxCollider2D>().size;
-        boxSize = new Vector2(playerSize.x + acmeTime, groundedSkin);
+        boxSize = new Vector2(playerSize.x * playerScale.x + acmeTime, groundedSkin);
     }
 
     // Update is called once per frame
@@ -38,16 +42,17 @@ public class CharacterMovement : MonoBehaviour {
 
     protected Vector2 targetVelocity;
 
-
+    void OnDrawGizmos() {
+        Vector2 centerPoint = (Vector2)transform.position + Vector2.down * (playerSize.y + boxSize.y) / 2f;
+        //Gizmos.DrawCube(centerPoint, boxSize);
+    }
 
     void Update() {
-        //Key input
-
         if (Input.GetButtonDown("Jump") && grounded) {
             grounded = false;
             Jump();
         } else {
-            Vector2 centerPoint = (Vector2)transform.position + Vector2.down * (playerSize.y + boxSize.y) /2f;
+            Vector2 centerPoint = (Vector2)transform.position + Vector2.down * (playerSize.y * playerScale.y + boxSize.y) /2f;
             grounded = Physics2D.OverlapBox(centerPoint, boxSize, 0, playerMask) != null;
         }
     }
@@ -56,7 +61,6 @@ public class CharacterMovement : MonoBehaviour {
 
         Vector2 move = Vector2.zero;
         move.x = Input.GetAxis("Horizontal");
-
         targetVelocity = move * maxSpeed * Time.deltaTime;
         Move(targetVelocity);
 
@@ -77,8 +81,9 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     void Jump() {
-        rb.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * (jumpVelocity + jumpBonusMultiplier) , ForceMode2D.Impulse);
     }
+
     void Move(Vector2 move) {
         rb.position = rb.position + move;
         return;

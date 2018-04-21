@@ -44,7 +44,7 @@ public class DragSprite : MonoBehaviour {
 
         if (active) {
             MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            objPosition = Camera.main.ScreenToWorldPoint(MousePosition);
+            objPosition = secondCamera.ScreenToWorldPoint(MousePosition);
 
             
 
