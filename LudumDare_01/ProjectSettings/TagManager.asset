@@ -9,6 +9,7 @@ TagManager:
   - Breakable
   - GunPoint
   - Bullet
+  - BallHead
   layers:
   - Default
   - TransparentFX

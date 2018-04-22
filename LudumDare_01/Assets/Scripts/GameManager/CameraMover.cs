@@ -5,11 +5,13 @@ using UnityEngine;
 public class CameraMover : MonoBehaviour {
 
     public float cameraMoveSpeed = 1f;
+
+    public float baseCameraMoveSpeed;
     bool cameraStarted = true;
 	// Use this for initialization
 	void Start () {
-		
-	}
+        baseCameraMoveSpeed = cameraMoveSpeed;
+    }
 	
     void MoveCameraUp() {
         Camera.main.transform.Translate(Vector3.up * cameraMoveSpeed * Time.deltaTime);

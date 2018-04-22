@@ -7,18 +7,23 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     GameObject player;
 
+    CameraMover cameraMover;
     CharacterShoot characterShoot;
     CharacterMovement characterMovement;
-    private void Awake() {
 
-        player = GameObject.FindGameObjectWithTag("Player");
-        characterShoot = player.GetComponent<CharacterShoot>();
-        characterMovement= player.GetComponent<CharacterMovement>();
+    public float SwingerScoreReductionTime = 2f;
+    private void Awake() {
         if (Instance == null) {
             Instance = this;
         } else {
             Destroy(gameObject);
         }
+        cameraMover = GetComponent<CameraMover>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        characterShoot = player.GetComponent<CharacterShoot>();
+        characterMovement= player.GetComponent<CharacterMovement>();
+
+        StartCoroutine(swingerReduce());
     }
 
     // Increases jump ability
@@ -27,8 +32,20 @@ public class GameManager : MonoBehaviour {
 
     }
 
+    public IEnumerator swingerReduce() {
+        while (true) {
+            yield return new WaitForSeconds(SwingerScoreReductionTime);
+            if (SwingerScore > 0) {
+                SwingerScore--;
+                cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 / (SwingerScore + 1));
+            }
+        }
+
+    }
     //Decreases the camera speed.
     public void swingGameValueUpdate() {
+        SwingerScore++;
+        cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 / (SwingerScore + 1));
 
     }
 
@@ -36,10 +53,8 @@ public class GameManager : MonoBehaviour {
     public void quadGameSuccess() {
         characterShoot.Shoot();
     }
-
-    public float spinGameScore;
-    public float SwingerScore;
-    public float tapScore;
+    
+    public float SwingerScore = 0;
 	// Use this for initialization
 	void Start () {
 		

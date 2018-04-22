@@ -1,15 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DragSprite : MonoBehaviour {
 
     public LayerMask twirlAble;
+    public GameObject ballHead;
+
 
     Camera secondCamera;
-
+    public float maxDistanceTolerance = 0.1f;
+    float maxDistance;
+    Rigidbody2D ballHead_rb;
     void Start () {
+        maxDistance = Vector3.Distance(transform.position, ballHead.transform.position);
         secondCamera = GameObject.FindGameObjectWithTag("SecondCamera").GetComponent<Camera>();
+        ballHead_rb = ballHead.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -29,7 +33,22 @@ public class DragSprite : MonoBehaviour {
         }
 
     }
+
+    
+    void UpdateMaxDistance() {
+        float current_distance = Vector3.Distance(transform.position, ballHead.transform.position);
+        if (current_distance > maxDistance + maxDistanceTolerance) {
+            Vector2 direction = (ballHead.transform.position - transform.position).normalized;
+            Vector2 curr_position = transform.position;
+            ballHead_rb.MovePosition(curr_position + direction * maxDistance);
+        }
+    }
+    void FixedUpdate() {
+        //UpdateMaxDistance();
+    }
+
     void Update() {
+
 
         if (Input.GetMouseButton(0)) {
             hit = Physics2D.Raycast(secondCamera.ScreenPointToRay(Input.mousePosition).origin,
