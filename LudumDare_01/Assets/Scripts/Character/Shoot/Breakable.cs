@@ -7,7 +7,7 @@ public class Breakable : MonoBehaviour {
 
 
     public void takeDamage() {
-        print("I should be dead.");
+
         Destroy(gameObject);
     }
 

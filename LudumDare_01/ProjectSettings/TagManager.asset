@@ -10,6 +10,8 @@ TagManager:
   - GunPoint
   - Bullet
   - BallHead
+  - Bag
+  - GameManager
   layers:
   - Default
   - TransparentFX
@@ -23,8 +25,8 @@ TagManager:
   - Player
   - twirlAble
   - clickAble
-  - 
-  - 
+  - TriggerArea
+  - Twirly
   - 
   - 
   - 

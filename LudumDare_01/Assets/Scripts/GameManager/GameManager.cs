@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -11,7 +12,19 @@ public class GameManager : MonoBehaviour {
     CharacterShoot characterShoot;
     CharacterMovement characterMovement;
 
-    public float SwingerScoreReductionTime = 2f;
+    [Header("Click Features.")]
+    public float maxJumpBonus = 6f;
+    public float normalizeAmount = 100f;
+    public ParticleSystem goldClickerPS;
+    public ParticleSystem jumpParticles;
+
+    [Header("SwingerFeatures.")]
+    public float SwingerScoreReductionTime = 4f;
+    [HideInInspector]
+    public float SwingerScore = 0;
+    public ParticleSystem redSwingerPS;
+    public ParticleSystem redDeadZonePS;
+
     private void Awake() {
         if (Instance == null) {
             Instance = this;
@@ -28,8 +41,13 @@ public class GameManager : MonoBehaviour {
 
     // Increases jump ability
     public void tapGameValueUpdate(float angularVelocity) {
-        characterMovement.jumpBonusMultiplier = angularVelocity / 100f;
+        float normalizedRotation = Mathf.Clamp(angularVelocity / normalizeAmount, 0, maxJumpBonus);
+        characterMovement.jumpBonusMultiplier = normalizedRotation;
+        ParticleSystem.EmissionModule emissionModule = goldClickerPS.emission;
+        emissionModule.rateOverTime = (Mathf.Clamp(normalizedRotation - 3, 0, 3) * 200);
 
+        ParticleSystem.EmissionModule emissionModule_jump = jumpParticles.emission;
+        emissionModule_jump.burstCount = (int) (Mathf.Clamp(normalizedRotation, 0, 6));
     }
 
     public IEnumerator swingerReduce() {
@@ -37,7 +55,13 @@ public class GameManager : MonoBehaviour {
             yield return new WaitForSeconds(SwingerScoreReductionTime);
             if (SwingerScore > 0) {
                 SwingerScore--;
-                cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 / (SwingerScore + 1));
+                cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 - (SwingerScore / 6));
+
+                ParticleSystem.EmissionModule emissionModule = redSwingerPS.emission;
+                emissionModule.rateOverTime = (Mathf.Clamp(SwingerScore, 0, 5) * 30);
+
+                ParticleSystem.EmissionModule emissionModule_dz = redDeadZonePS.emission;
+                emissionModule_dz.rateOverTime = (5 - Mathf.Clamp(SwingerScore, 0, 5)) * 30;
             }
         }
 
@@ -45,8 +69,14 @@ public class GameManager : MonoBehaviour {
     //Decreases the camera speed.
     public void swingGameValueUpdate() {
         SwingerScore++;
-        cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 / (SwingerScore + 1));
+        SwingerScore = Mathf.Clamp(SwingerScore, 0, 5);
+        cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 - (SwingerScore / 6));
+        ParticleSystem.EmissionModule emissionModule = redSwingerPS.emission;
+        emissionModule.rateOverTime = (Mathf.Clamp(SwingerScore, 0, 5) * 30);
 
+
+        ParticleSystem.EmissionModule emissionModule_dz = redDeadZonePS.emission;
+        emissionModule_dz.rateOverTime = (5 - Mathf.Clamp(SwingerScore, 0, 5)) * 30;
     }
 
     // Shoots a laser.
@@ -54,7 +84,12 @@ public class GameManager : MonoBehaviour {
         characterShoot.Shoot();
     }
     
-    public float SwingerScore = 0;
+
+    public void GameOver() {
+        
+        SceneManager.LoadScene(0);
+    }
+
 	// Use this for initialization
 	void Start () {
 		

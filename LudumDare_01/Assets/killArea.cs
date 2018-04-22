@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RotationUpdate : MonoBehaviour {
+public class killArea : MonoBehaviour {
 
-    
-    void OnTriggerEnter2D(Collider2D col) {
-        if (col.tag == "BallHead") {
-            GameManager.Instance.swingGameValueUpdate();
+    void OnCollisionEnter2D(Collision2D col) {
+        if (col.gameObject.tag == "Player") {
+            GameManager.Instance.GameOver();
         }
     }
-
 	// Use this for initialization
 	void Start () {
 		

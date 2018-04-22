@@ -36,20 +36,7 @@ public class DeadzoneCamera : MonoBehaviour
         float localX = target.transform.position.x - transform.position.x;
         float localY = target.transform.position.y - transform.position.y;
 
-        if (localX < deadzone.xMin)
-        {
-            smoothPos.x += localX - deadzone.xMin;
-        }
-        else if (localX > deadzone.xMax)
-        {
-            smoothPos.x += localX - deadzone.xMax;
-        }
-
-        if (localY < deadzone.yMin)
-        {
-            smoothPos.y += localY - deadzone.yMin;
-        }
-        else if (localY > deadzone.yMax)
+        if (localY > deadzone.yMax)
         {
             smoothPos.y += localY - deadzone.yMax;
         }
@@ -77,7 +64,7 @@ public class DeadzoneCamera : MonoBehaviour
         Vector3 current = transform.position;
         current.x = smoothPos.x; // we don't smooth horizontal movement
 
-        transform.position = Vector3.SmoothDamp(current, smoothPos, ref _currentVelocity, smoothSpeed);
+        transform.position = Vector3.SmoothDamp(current, smoothPos + new Vector3(0, 3, 0), ref _currentVelocity, smoothSpeed);
     }
 }
 

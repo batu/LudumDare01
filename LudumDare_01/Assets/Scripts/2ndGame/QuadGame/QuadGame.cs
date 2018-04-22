@@ -8,7 +8,6 @@ using System.Linq;
 public class QuadGame : MonoBehaviour {
 
     const int numQuads = 4;
-    int score = 0;
     GameObject[] Quads;
     List<int> clickedList;
     List<int> randomList;
@@ -35,6 +34,7 @@ public class QuadGame : MonoBehaviour {
         if (value == clickedListIndex) {
             quad.updateColor(Color.green);
         } else {
+            StartCoroutine(wrapUp());
             quad.updateColor(Color.red);
         }
         clickedListIndex += 1;
@@ -84,15 +84,19 @@ public class QuadGame : MonoBehaviour {
         }
     }
 
+    
     IEnumerator wrapUp() {
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < 4; i++) {
+        yield return new WaitForSeconds(0.1f);
+        bool fire = true;
+        for (int i = 0; i < clickedList.Count; i++) {
             if (i != clickedList[i]) {
                 StartCoroutine(ReShuffle());
+                fire = false;
                 yield return null;
             }
         }
-        GameManager.Instance.quadGameSuccess();
+        if(fire)
+            GameManager.Instance.quadGameSuccess();
         StartCoroutine(ReShuffle());
         yield return null;
     }

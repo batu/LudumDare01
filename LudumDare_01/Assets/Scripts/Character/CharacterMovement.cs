@@ -8,13 +8,23 @@ public class CharacterMovement : MonoBehaviour {
 
     public float jumpBonusMultiplier = 0f;
 
+    
+    public bool hasBag = false;
+
+    // idle, side
+    public Sprite[] noBagSprites;
+
+    // left idle side
+    public Sprite[] BagSprites;
+
+    public ParticleSystem jumpParticles;
     [Header("Jump Related Variables")]
     [Range(0, 10)]
     public float jumpVelocity = 5f;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float groundedSkin = 0.05f;
-    public float acmeTime = 0.05f;
+    public float acmeTime = -0.05f;
 
     public LayerMask playerMask;
     bool grounded = true;
@@ -43,7 +53,7 @@ public class CharacterMovement : MonoBehaviour {
     protected Vector2 targetVelocity;
 
     void OnDrawGizmos() {
-        Vector2 centerPoint = (Vector2)transform.position + Vector2.down * (playerSize.y + boxSize.y) / 2f;
+        //Vector2 centerPoint = (Vector2)transform.position + Vector2.down * (playerSize.y + boxSize.y) / 2f;
         //Gizmos.DrawCube(centerPoint, boxSize);
     }
 
@@ -57,20 +67,33 @@ public class CharacterMovement : MonoBehaviour {
         }
     }
 
-    void FixedUpdate() {
 
-        Vector2 move = Vector2.zero;
-        move.x = Input.GetAxis("Horizontal");
-        targetVelocity = move * maxSpeed * Time.deltaTime;
-        Move(targetVelocity);
+    void UpdateSprite(Vector2 move) {
+        if (!hasBag) {
+            if (move.x > 0.05f) {
+                spriteRenderer.sprite = noBagSprites[1];
+                spriteRenderer.flipX = false;
+            } else if (move.x < -0.05f) {
+                spriteRenderer.sprite = noBagSprites[1];
+                spriteRenderer.flipX = true;
+            } else {
+                spriteRenderer.sprite = noBagSprites[0];
+                spriteRenderer.flipX = false;
+            }
+        } 
 
-
-        bool flipSprite = (spriteRenderer.flipX ? (move.x > 0.03f) : (move.x < -0.03f));
-        if (flipSprite) {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
+        if (hasBag) {
+            if (move.x > 0.05f) {
+                spriteRenderer.sprite = BagSprites[2];
+            } else if (move.x < -0.05f) {
+                spriteRenderer.sprite = BagSprites[0];
+            } else {
+                spriteRenderer.sprite = BagSprites[1];
+            }
         }
+    }
 
-        // Adjust jump fall.
+    void AdjustJump() {
         if (rb.velocity.y < 0) {
             rb.gravityScale = fallMultiplier;
         } else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.Space)) {
@@ -80,8 +103,21 @@ public class CharacterMovement : MonoBehaviour {
         }
     }
 
+    void FixedUpdate() {
+
+        Vector2 move = Vector2.zero;
+        move.x = Input.GetAxis("Horizontal");
+        targetVelocity = move * maxSpeed * Time.deltaTime;
+
+        Move(targetVelocity);
+        UpdateSprite(move);
+        AdjustJump();
+    }
+
     void Jump() {
         rb.AddForce(Vector2.up * (jumpVelocity + jumpBonusMultiplier) , ForceMode2D.Impulse);
+        jumpParticles.Stop();
+        jumpParticles.Play();
     }
 
     void Move(Vector2 move) {
@@ -89,4 +125,7 @@ public class CharacterMovement : MonoBehaviour {
         return;
     }
 
+    public void pickUpBag() {
+        spriteRenderer.flipX = false;
+    }
 }
