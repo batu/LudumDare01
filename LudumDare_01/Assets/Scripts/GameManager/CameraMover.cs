@@ -6,7 +6,7 @@ public class CameraMover : MonoBehaviour {
    
     public float cameraMoveSpeed = 1f;
 
-    public float maxDistanceTreshold = 12.5f;
+    public float maxDistanceTreshold = 25f;
     public float baseCameraMoveSpeed;
     bool cameraStarted = true;
 

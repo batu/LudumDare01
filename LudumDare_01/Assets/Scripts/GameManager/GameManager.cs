@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
     public ParticleSystem redSwingerPS;
     public ParticleSystem redDeadZonePS;
 
+    public bool started = false;
     private void Awake() {
         if (Instance == null) {
             Instance = this;
@@ -68,15 +69,18 @@ public class GameManager : MonoBehaviour {
     }
     //Decreases the camera speed.
     public void swingGameValueUpdate() {
-        SwingerScore++;
-        SwingerScore = Mathf.Clamp(SwingerScore, 0, 5);
-        cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 - (SwingerScore / 6));
-        ParticleSystem.EmissionModule emissionModule = redSwingerPS.emission;
-        emissionModule.rateOverTime = (Mathf.Clamp(SwingerScore, 0, 5) * 30);
+        if (started) {
+            SwingerScore++;
+            SwingerScore = Mathf.Clamp(SwingerScore, 0, 5);
+            cameraMover.cameraMoveSpeed = cameraMover.baseCameraMoveSpeed * (1 - (SwingerScore / 6));
+            ParticleSystem.EmissionModule emissionModule = redSwingerPS.emission;
+            emissionModule.rateOverTime = (Mathf.Clamp(SwingerScore, 0, 5) * 30);
 
 
-        ParticleSystem.EmissionModule emissionModule_dz = redDeadZonePS.emission;
-        emissionModule_dz.rateOverTime = (5 - Mathf.Clamp(SwingerScore, 0, 5)) * 30;
+            ParticleSystem.EmissionModule emissionModule_dz = redDeadZonePS.emission;
+            emissionModule_dz.rateOverTime = (5 - Mathf.Clamp(SwingerScore, 0, 5)) * 30;
+        }
+        
     }
 
     // Shoots a laser.
@@ -87,7 +91,7 @@ public class GameManager : MonoBehaviour {
 
     public void GameOver() {
         
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
 	// Use this for initialization

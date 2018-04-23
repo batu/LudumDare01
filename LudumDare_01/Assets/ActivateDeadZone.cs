@@ -9,6 +9,7 @@ public class ActivateDeadZone : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.tag == "Player") {
             GameManager.Instance.transform.GetComponent<CameraMover>().enabled = true;
+            GameManager.Instance.started = true;
             deadZone.SetActive(true);
         }
     }

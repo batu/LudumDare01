@@ -13,7 +13,7 @@ public class DeadZone : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col) {
         if(col.tag == "Player") {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
     }
 	// Update is called once per frame

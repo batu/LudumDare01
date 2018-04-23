@@ -9,10 +9,25 @@ public class bagPickup : MonoBehaviour {
             col.gameObject.GetComponent<CharacterMovement>().hasBag = true;
             col.gameObject.GetComponent<CharacterMovement>().pickUpBag();
             secondCam.GetComponent<Camera>().nearClipPlane = 0.3f;
-            Destroy(gameObject);
+            StartCoroutine(camSlide());
+
+
+
         }
     }
 
+
+    IEnumerator camSlide() {
+
+        Camera cam = Camera.main;
+        
+        while (cam.rect.width > 0.5f) {
+
+            cam.rect = new Rect(0f, 0f, cam.rect.width - 0.01f, 1f);
+            yield return new WaitForEndOfFrame();
+        }
+        Destroy(gameObject);
+    }
     public GameObject secondCam;
 
 }
