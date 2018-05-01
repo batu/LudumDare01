@@ -256,7 +256,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 f31249dd0cfa5ead2bc68a7cdb15bb76 Assembly-CSharp.dll:.Dropablle
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 db3b233e35a88802fed1717d19c3d9ec Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.FollowTarget
-137c2d5bd4307b373e013c049f5918e1 Assembly-CSharp.dll:.bagPickup
+b28280baa66b83f6a826b059fbbcb097 Assembly-CSharp.dll:.bagPickup
 600bf2432747463c84424edccb3c1d05 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.Camera2DFollow
 a8796ecdc9d5c260bbe32f30c4b10708 Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.TouchPad
 0ad469aca31264c6140b1e503c43ab6b Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.TimedObjectDestructor
